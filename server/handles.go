@@ -47,13 +47,13 @@ func updateSatelite(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Funciones.UpdateSatelite(w, r))
 }
 
-/*Basura*/
-func getCountry(w http.ResponseWriter, r *http.Request) {
+/*FAse 3 */
+func getSecretAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(Funciones.GetSecretAll(w, r))
 }
 
-func addCountry(w http.ResponseWriter, r *http.Request) {
+func addSecretNew(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(Funciones.AddSecretNew(w, r))
 }

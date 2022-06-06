@@ -12,6 +12,7 @@ func initRoutes() http.Handler {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", index)
 
+	/*Fase 1 en contruccion*/
 	router.HandleFunc("/topsecret", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -23,6 +24,7 @@ func initRoutes() http.Handler {
 		}
 	})
 
+	/*Fase 2*/
 	router.HandleFunc("/hightopsecret/{id}", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
@@ -50,19 +52,20 @@ func initRoutes() http.Handler {
 			return
 		}
 	})
-	/*
-		router.HandleFunc("/localitationsecret", func(w http.ResponseWriter, r *http.Request) {
-			switch r.Method {
-			case http.MethodGet:
-				getCountry(w, r)
-			case http.MethodPost:
-				addCountry(w, r)
-			default:
-				w.WriteHeader(http.StatusMethodNotAllowed)
-				fmt.Fprintf(w, "Metodo no permitido 2")
-				return
-			}
-		})
-	*/
+
+	/*Fase 3*/
+	router.HandleFunc("/localitationsecret", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			getSecretAll(w, r)
+		case http.MethodPost:
+			addSecretNew(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			fmt.Fprintf(w, "Metodo no permitido 2")
+			return
+		}
+	})
+
 	return router
 }
