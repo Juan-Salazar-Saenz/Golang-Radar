@@ -17,6 +17,8 @@ func initRoutes() http.Handler {
 		switch r.Method {
 		case http.MethodPost:
 			createMessage(w, r)
+		case http.MethodGet:
+			getMessageAll(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			fmt.Fprintf(w, "Metodo no permitido 0")

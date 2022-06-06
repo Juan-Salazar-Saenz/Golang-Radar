@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+/*Fase 0*/
 func index(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -17,11 +18,18 @@ func index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello world, welcome to the resistance!")
 }
 
+/*Fase 1*/
 func createMessage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(Funciones.CreateMessage(w, r))
 }
 
+func getMessageAll(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.GetMessageAll(w, r))
+}
+
+/*Fase 2*/
 func createSatelite(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(Funciones.CreateSatelite(w, r))
@@ -47,7 +55,7 @@ func updateSatelite(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Funciones.UpdateSatelite(w, r))
 }
 
-/*FAse 3 */
+/*Fase 3 */
 func getSecretAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(Funciones.GetSecretAll(w, r))

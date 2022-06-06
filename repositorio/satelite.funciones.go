@@ -47,7 +47,7 @@ func ValidacionSatelite(satelite *Models.Satelite) string {
 		return error2
 	}
 
-	error3 := GetOneSateliteName(satelite.Name)
+	_, _, error3 := GetOneSateliteName(satelite.Name)
 	if error3 != "ok" {
 		return error3
 	}
@@ -64,15 +64,15 @@ func validaCoordenadas(eje int, texto string) string {
 }
 
 //Validamos que el nombre sea unico
-func GetOneSateliteName(name string) string {
+func GetOneSateliteName(name string) (int, int, string) {
 
 	for _, satelite := range allSatelites {
 		if satelite.Name == name {
-			return "Satelite exist"
+			return satelite.X, satelite.Y, "Satelite exist"
 		}
 	}
 
-	return "ok"
+	return 0, 0, "ok"
 }
 
 //Metodo para consultar todos los satelites existentes
