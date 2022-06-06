@@ -14,9 +14,40 @@ func index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "Hello Word %s", "visitor")
+	fmt.Fprintf(w, "Hello world, welcome to the resistance!")
 }
 
+func createMessage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.CreateMessage(w, r))
+}
+
+func createSatelite(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.CreateSatelite(w, r))
+}
+
+func getSateliteAll(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.GetSateliteAll(w, r))
+}
+
+func getOneSatelite(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.GetOneSatelite(w, r))
+}
+
+func deleteSatelite(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.DeleteSatelite(w, r))
+}
+
+func updateSatelite(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.UpdateSatelite(w, r))
+}
+
+/*Basura*/
 func getCountry(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(Funciones.GetSecretAll(w, r))

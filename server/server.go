@@ -5,9 +5,8 @@ import (
 )
 
 func New(addr string) *http.Server {
-	initRoutes()
-
 	return &http.Server{
-		Addr: addr,
+		Addr:    addr,
+		Handler: initRoutes(),
 	}
 }
