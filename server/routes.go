@@ -13,6 +13,21 @@ func initRoutes() http.Handler {
 	router.HandleFunc("/", index)
 
 	/*Fase 1 en contruccion*/
+	router.HandleFunc("/topsecret/{id}", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			getOneMessage(w, r)
+		case http.MethodDelete:
+			deleteMessage(w, r)
+		case http.MethodPut:
+			updateMessage(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			fmt.Fprintf(w, "Metodo no permitido 0")
+			return
+		}
+	})
+
 	router.HandleFunc("/topsecret", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:

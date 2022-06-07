@@ -29,6 +29,21 @@ func getMessageAll(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(Funciones.GetMessageAll(w, r))
 }
 
+func getOneMessage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.GetOneMessage(w, r))
+}
+
+func deleteMessage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.DeleteMessage(w, r))
+}
+
+func updateMessage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Funciones.UpdateMessage(w, r))
+}
+
 /*Fase 2*/
 func createSatelite(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

@@ -3,10 +3,11 @@ package repositorio
 import (
 	"encoding/json"
 	Models "golang/models"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // Persistencia
@@ -20,27 +21,24 @@ var tamañoAnterior int = 0
 var xG int = 0
 var yG int = 0
 
+/*Crea un nuevo mensaje de la flota*/
 func CreateMessage(w http.ResponseWriter, r *http.Request) any {
 	newFlota := &Models.Flota{}
 
-	log.Println("1")
 	err := json.NewDecoder(r.Body).Decode(newFlota)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return err
 	}
-	log.Println(newFlota)
-	log.Println("2")
+
 	validacionejes := validacionesEjes(newFlota)
 	if validacionejes != "ok" {
 		w.WriteHeader(http.StatusBadRequest)
 		return validacionejes
 	}
 
-	log.Println(validacionejes)
-	log.Println("3")
 	/*Codificamos el mensaje*/
-	mensaje := [100]*Models.Item{}
+	mensaje := [100]Models.Item{}
 	for i, satelite := range newFlota.Secret {
 		for j, item := range satelite.Message {
 			if i > 0 {
@@ -57,46 +55,35 @@ func CreateMessage(w http.ResponseWriter, r *http.Request) any {
 			}
 		}
 	}
-	log.Println("4")
 
 	/*unificamos el mensaje recibido*/
 	var mensajeUltrasecreto = ""
-	log.Println(mensajeUltrasecreto)
-	var contador = len(mensajeUltrasecreto)
+	var contador = len(mensaje)
 	if contador > 0 {
 		for _, mensajes := range mensaje {
-			log.Println("4.1")
 			if string(mensajes.Item) != "" {
-				log.Println("4.2")
 				mensajeUltrasecreto += string(mensajes.Item) + " "
 			}
 		}
 	}
 
-	log.Println("5")
-
 	/*guardamos el mensaje*/
 	nuevoNave := &Models.Nave{}
 	nuevoNave.ID = len(allNaves) + 1
-	log.Println("5.1")
 	nuevoNave.Message = string(mensajeUltrasecreto)
-	log.Println("5.2")
 	nuevoNave.X = xG
-	log.Println("5.3")
 	nuevoNave.Y = yG
-	log.Println("5.4")
 	allNaves = append(allNaves, nuevoNave)
 
-	log.Println("6")
 	/*Guardamos el mensaje de la flota que se envio despues de las distintas validaciones*/
 	newFlota.ID = len(allflota) + 1
 	allflota = append(allflota, newFlota)
 
-	log.Println("7")
 	/*Mostramos el mensaje tal cual fue decodificado*/
 	return nuevoNave
 }
 
+/*Validaciones sobres los eje x y y*/
 func validacionesEjes(flota *Models.Flota) string {
 	/*Aqui hacemos la validaciones del mensaje*/
 	for i, satelite := range flota.Secret {
@@ -195,6 +182,7 @@ func validafCoordenadas(eje int, texto string, name string) string {
 	return "ok"
 }
 
+/*Validacoines matematicas*/
 func validacionCoordenadas(xP int, h int) int {
 	/*De acuerdo a la definicon de Traslación de ejes en el plano cartesiano tenemos
 	Origen(h,k) Punto(x,y)
@@ -210,4 +198,65 @@ func validacionCoordenadas(xP int, h int) int {
 func GetMessageAll(w http.ResponseWriter, r *http.Request) any {
 	w.WriteHeader(http.StatusOK)
 	return allflota
+}
+
+/*Metodo para consultar un solo mensaje*/
+func GetOneMessage(w http.ResponseWriter, r *http.Request) any {
+	vars := mux.Vars(r)
+	messageID, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		return "Invalid ID of Message"
+	}
+
+	for _, Flota := range allflota {
+		if Flota.ID == messageID {
+			return Flota
+		}
+	}
+
+	return "Message does not exist"
+}
+
+/*Metodo para eliminar un solo mensaje de flota*/
+func DeleteMessage(w http.ResponseWriter, r *http.Request) any {
+	vars := mux.Vars(r)
+	messageID, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		return "Invalid ID of Message"
+	}
+
+	for i, Flota := range allflota {
+		if Flota.ID == messageID {
+			allflota = append(allflota[:i], allflota[i+1:]...)
+			return "The message with ID " + strconv.Itoa(messageID) + " has been delete successfully"
+		}
+	}
+
+	return "Message does not exist"
+}
+
+/*Metodo para actualizar un solo mensaje de flota*/
+func UpdateMessage(w http.ResponseWriter, r *http.Request) any {
+	vars := mux.Vars(r)
+	messageID, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		return "Invalid ID of Message"
+	}
+
+	updatedFlota := &Models.Flota{}
+	err1 := json.NewDecoder(r.Body).Decode(updatedFlota)
+	if err1 != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return err1
+	}
+
+	for i, Flota := range allflota {
+		if Flota.ID == messageID {
+			allflota = append(allflota[:i], allflota[i+1:]...)
+			allflota = append(allflota, updatedFlota)
+			return "The message with ID " + strconv.Itoa(messageID) + " has been updated successfully"
+		}
+	}
+
+	return "Message does not exist"
 }
